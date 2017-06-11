@@ -21,7 +21,7 @@ struct item{
 };
 
 
-void isMatch(){
+void isMatch(item itemList[], int ops, bool sale, int price, string type){
     for(int n = 0; n < i; n++){//loops through the next line in the list to compare
         ops++;
         if(sale == true){
@@ -43,28 +43,33 @@ void readFile(string fName){
     infile.open(fName);//opens the file
     item itemList[100];//creates an array of structs of 100
     int ops = 0;// for counting the number of operations
-    bool sale;
+    bool sale = 0;
+    string type = "";
+    string want = "";
+    int price = 0;
     int i = 0;
-    int c = 0;
-    string strline;
+    //int c = 0;
+    string strline = "";
     while(!infile.eof()){
         item temp;
         getline(infile, strline);
-        string type = strline.substr(0, strline.find_first_of(','));//this locates the string in the line that is the type
-        string want = strline.substr(strline.find_first_of(',') + 2 );//this locates the string in the line for the sale or want
+        cin.ignore();
+        type = strline.substr(0, strline.find_first_of(','));//this locates the string in the line that is the type
+        want = strline.substr(strline.find_first_of(',') + 2);//this locates the string in the line for the sale or want
         if(want[0] == 'f'){// this is to assign a boolean variable to the string/char that was found in the line
             sale = false;
         }
-        else
+        else{
             sale = true;
+        }
+        price = atoi(strline.substr(strline.find_last_of(',')+2).c_str());//this locates the instance of the price and makes it an int
         
-        int price = atoi(strline.substr(strline.find_last_of(',')+2).c_str());//this locates the instance of the price and makes it an int
-        
-        if(i == 0){ // This is assigning values to the struct for the first line of the file
+        //if(i == 0){ // This is assigning values to the struct for the first line of the file
             itemList[i].price = price;
             itemList[i].type = type;
             itemList[i].sale = sale;
             ops++; // this is adding up the operations that were used
+            i++;
         }
         else{
             for(int n = 0; n < i; n++){

@@ -21,7 +21,7 @@ struct item{
 };
 
 
-int removeAndShift((&)item itemList)[], int rem, int z){
+int removeAndShift(item (&itemList)[], int rem, int z){
     for(int i = rem + 1; i < z; i++){
         itemList[i-1] = itemList[i];
     }

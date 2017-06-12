@@ -20,44 +20,34 @@ struct item{
     bool sale;
 };
 
-
-int removeAndShift(item (&itemList)[], int rem, int z){
-    for(int i = rem + 1; i < z; i++){
-        itemList[i-1] = itemList[i];
+void removeAndShift(item itemList[], int rem, int z){
+    for(int j = rem + 1; j < z; j++){
+        itemList[j-1] = itemList[j];
     }
     item empty;
     itemList[z-1] = empty;
-    
-    return rem;
 
 }
 
-void isMatch(item itemList[], int& ops, int& z){
-    for(int n = 0; n < z; n++){//loops through the next line in the list to compare
+bool isMatch(item itemList[], item temp, int i, int ops){
+    for(int n = 0; n < i; n++){//loops through the next line in the list to compare
         ops++;
-        for(int m = 0; m < z; m++){
             if(itemList[n].sale == true){
-                if(itemList[m].type == itemList[n].type && itemList[m].sale != itemList[n].sale && itemList[m].price >= itemList[n].price){
+                if(temp.type == itemList[n].type && temp.sale != itemList[n].sale &&  itemList[n].price>= temp.price){
                     cout << itemList[n].type << " " << itemList[n].price << endl;
-                    removeAndShift(itemList, n, z);
-                    z--;
+                    removeAndShift(itemList, n, i);
+                    i--;
                 }
             }
             else{
-                if(itemList[m].type == itemList[n].type && itemList[m].sale != itemList[n].sale && itemList[m].price <= itemList[n].price){
-                    cout << itemList[m].type << " " << itemList[m].price << endl;
-                    removeAndShift(itemList, m, z);
-                    z--;
+                if(temp.type == itemList[n].type && temp.sale != itemList[n].sale && temp.price <= itemList[n].price){
+                    cout << temp.type << " " << temp.price << endl;
+                    removeAndShift(itemList, n, i);
+                    i--;
                 }
             }
-            
-            //I think that I have to do something like this for the case where no match is found. It says to add the item to the first unused position but I don't really understand how something is unused??
-        }
-        item temp = itemList[removeAndShift(itemList, n, z)];
-        itemList[n+1] = itemList[n];
-        itemList[n] = itemList[z];
     }
-
+    return false;
 }
 
 void readFile(string fName){
@@ -69,7 +59,8 @@ void readFile(string fName){
     string type = "";
     string want = "";
     int price = 0;
-    int i = 0;
+    int i = 0;// counts number of elements in the array
+    item temp;
     string strline = "";
     while(!infile.eof()){
         getline(infile, strline);
@@ -84,18 +75,19 @@ void readFile(string fName){
         }
         price = atoi(strline.substr(strline.find_last_of(',')+2).c_str());//this locates the instance of the price and makes it an int
         
-            itemList[i].price = price;
-            itemList[i].type = type;
-            itemList[i].sale = sale;
-            ops++; // this is adding up the operations that were used
+        temp.price = price;
+        temp.type = type;
+        temp.sale = sale;
+        isMatch(itemList, temp, i, ops);// this is calling the match function
+        if(!isMatch(itemList, temp, i, ops)){
+            itemList[i] = temp;
             i++;
-        cout << "item read " << itemList[i].type << " cost " << endl;
+        }
+        
+        cout << "item read " << itemList[i].type << " cost " << itemList[i].price << endl; // this is printing out the array
     }
-    int n = 0;
-    while(itemList[n].type != ""){
-        n++;
-    }
-    isMatch(itemList, ops, n);
+
+    
     
 }
 

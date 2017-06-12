@@ -21,36 +21,41 @@ struct item{
 };
 
 
-void removeAndShift(item itemList[], int n, int z){
-    for(int i = n + 1; i < z; i++){
+int removeAndShift((&)item itemList)[], int rem, int z){
+    for(int i = rem + 1; i < z; i++){
         itemList[i-1] = itemList[i];
     }
     item empty;
     itemList[z-1] = empty;
+    
+    return rem;
 
 }
 
-void isMatch(item itemList[], int& ops, int z){
+void isMatch(item itemList[], int& ops, int& z){
     for(int n = 0; n < z; n++){//loops through the next line in the list to compare
         ops++;
         for(int m = 0; m < z; m++){
             if(itemList[n].sale == true){
                 if(itemList[m].type == itemList[n].type && itemList[m].sale != itemList[n].sale && itemList[m].price >= itemList[n].price){
                     cout << itemList[n].type << " " << itemList[n].price << endl;
+                    removeAndShift(itemList, n, z);
+                    z--;
                 }
             }
             else{
                 if(itemList[m].type == itemList[n].type && itemList[m].sale != itemList[n].sale && itemList[m].price <= itemList[n].price){
                     cout << itemList[m].type << " " << itemList[m].price << endl;
+                    removeAndShift(itemList, m, z);
+                    z--;
                 }
             }
-            if(itemList[m].type != itemList[n].type || itemList[m].price <= itemList[n].price){}
-            if(itemList[m].type != itemList[n].type || itemList[m].price >= itemList[n].price){}
-            item temp = itemList[m];
-            itemList[m+1] = itemList[m];
-            itemList[m] = itemList[z];
+            
             //I think that I have to do something like this for the case where no match is found. It says to add the item to the first unused position but I don't really understand how something is unused??
         }
+        item temp = itemList[removeAndShift(itemList, n, z)];
+        itemList[n+1] = itemList[n];
+        itemList[n] = itemList[z];
     }
 
 }
@@ -65,7 +70,6 @@ void readFile(string fName){
     string want = "";
     int price = 0;
     int i = 0;
-    //int c = 0;
     string strline = "";
     while(!infile.eof()){
         getline(infile, strline);
@@ -93,7 +97,6 @@ void readFile(string fName){
     }
     isMatch(itemList, ops, n);
     
-    
 }
 
 int main(int argc, const char * argv[]) {
@@ -101,7 +104,7 @@ int main(int argc, const char * argv[]) {
     string fName = "";
     cout << "Welcome to Craigslist, but not Craiglist. Please enter your filename."<< endl;//opening statement
     getline(cin,fName);// Allows the user to input the filename
-    void readFile(fName);
+    readFile(fName);
     
     
     

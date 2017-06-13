@@ -24,12 +24,13 @@ void removeAndShift(item itemList[], int rem, int z){
     for(int j = rem + 1; j < z; j++){
         itemList[j-1] = itemList[j];
     }
-    item empty;
-    itemList[z-1] = empty;
+    itemList[z-1].price = 0;
+    itemList[z-1].sale = false;
+    itemList[z-1].type = "";
 
 }
 
-bool isMatch(item itemList[], item temp, int i, int ops){
+bool isMatch(item itemList[], item temp, int i, int& ops){
     for(int n = 0; n < i; n++){//loops through the next line in the list to compare
         ops++;
             if(itemList[n].sale == true){
@@ -37,13 +38,15 @@ bool isMatch(item itemList[], item temp, int i, int ops){
                     cout << itemList[n].type << " " << itemList[n].price << endl;
                     removeAndShift(itemList, n, i);
                     i--;
+                    return true;
                 }
             }
             else{
-                if(temp.type == itemList[n].type && temp.sale != itemList[n].sale && temp.price <= itemList[n].price){
+                if(temp.type == itemList[n].type && temp.sale != itemList[n].sale && temp.price >= itemList[n].price){
                     cout << temp.type << " " << temp.price << endl;
                     removeAndShift(itemList, n, i);
                     i--;
+                    return true;
                 }
             }
     }
@@ -64,7 +67,7 @@ void readFile(string fName){
     string strline = "";
     while(!infile.eof()){
         getline(infile, strline);
-        cin.ignore();
+        //cin.ignore();
         type = strline.substr(0, strline.find_first_of(','));//this locates the string in the line that is the type
         want = strline.substr(strline.find_first_of(',') + 2);//this locates the string in the line for the sale or want
         if(want[0] == 'f'){// this is to assign a boolean variable to the string/char that was found in the line
@@ -81,10 +84,11 @@ void readFile(string fName){
         isMatch(itemList, temp, i, ops);// this is calling the match function
         if(!isMatch(itemList, temp, i, ops)){
             itemList[i] = temp;
-            i++;
+            
         }
         
         cout << "item read " << itemList[i].type << " cost " << itemList[i].price << endl; // this is printing out the array
+        i++;
     }
 
     

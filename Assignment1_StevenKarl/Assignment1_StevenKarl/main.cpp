@@ -11,6 +11,8 @@
 #include <string> 
 #include <cstring> 
 #include <istream>
+#include <algorithm>
+#include <array>
 using namespace std;
 
 
@@ -19,16 +21,6 @@ struct item{
     int price;
     bool sale;
 };
-
-
-void sortThings(item itemList[].type){
-    int s = sizeof()/sizeof([0]);
-    sort(name, name + s);
-    for(int y = 0; y < s; y++){
-        cout << name[y] << endl;
-    }
-
-}
 
 void removeAndShift(item itemList[], int rem, int z){
     for(int j = rem + 1; j < z; j++){
@@ -81,7 +73,7 @@ void readFile(string fName){
     string strline = "";
     while(!infile.eof()){
         getline(infile, strline);
-        cin.ignore();
+        //cin.ignore();
         type = strline.substr(0, strline.find_first_of(','));//this locates the string in the line that is the type
         want = strline.substr(strline.find_first_of(',') + 2);//this locates the string in the line for the sale or want
         if(want[0] == 'f'){// this is to assign a boolean variable to the string/char that was found in the line
@@ -103,9 +95,12 @@ void readFile(string fName){
         }
         
     }
-    //cout << # << endl;
-    //cout << itemList[i].type << endl;
-    //cout << # << endl;
+    std::sort(itemList.begin(), itemList.end(),[](string &a, string &b){
+        return a < b; });
+    }
+    cout << "#" << endl;
+    cout << itemList[i].type << endl;
+    cout << "#" << endl;
 
     
     

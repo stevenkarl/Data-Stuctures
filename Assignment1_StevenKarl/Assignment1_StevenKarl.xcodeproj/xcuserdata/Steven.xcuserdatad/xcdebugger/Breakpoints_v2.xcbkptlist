@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Assignment1_StevenKarl/main.cpp"
-            timestampString = "519077793.984992"
+            timestampString = "519109981.598272"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
             landmarkName = "readFile(string fName)"
             landmarkType = "9">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Assignment1_StevenKarl/main.cpp"
-            timestampString = "519078732.882092"
+            timestampString = "519109981.598272"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "readFile(string fName)"
             landmarkType = "9">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Assignment1_StevenKarl/main.cpp"
-            timestampString = "519077793.984992"
+            timestampString = "519109981.598272"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "readFile(string fName)"
             landmarkType = "9">
          </BreakpointContent>
@@ -58,27 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Assignment1_StevenKarl/main.cpp"
-            timestampString = "519007213.731945"
+            timestampString = "519109981.598272"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "26"
-            endingLineNumber = "26"
-            landmarkName = "sortThings(item itemList[].type)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Assignment1_StevenKarl/main.cpp"
-            timestampString = "519083721.665704"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
             landmarkName = "isMatch(item itemList[], item temp, int&amp; i, int&amp; ops)"
             landmarkType = "9">
          </BreakpointContent>
@@ -90,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Assignment1_StevenKarl/main.cpp"
-            timestampString = "519083727.837413"
+            timestampString = "519109981.598272"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
             landmarkName = "isMatch(item itemList[], item temp, int&amp; i, int&amp; ops)"
             landmarkType = "9">
          </BreakpointContent>

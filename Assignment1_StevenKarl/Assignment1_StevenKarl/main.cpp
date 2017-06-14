@@ -20,6 +20,16 @@ struct item{
     bool sale;
 };
 
+
+void sortThings(item itemList[].type){
+    int s = sizeof()/sizeof([0]);
+    sort(name, name + s);
+    for(int y = 0; y < s; y++){
+        cout << name[y] << endl;
+    }
+
+}
+
 void removeAndShift(item itemList[], int rem, int z){
     for(int j = rem + 1; j < z; j++){
         itemList[j-1] = itemList[j];
@@ -27,15 +37,17 @@ void removeAndShift(item itemList[], int rem, int z){
     itemList[z-1].price = 0;
     itemList[z-1].sale = false;
     itemList[z-1].type = "";
-
 }
 
-bool isMatch(item itemList[], item temp, int i, int& ops){
+bool isMatch(item itemList[], item temp, int& i, int& ops){
+    int j = 0;
     for(int n = 0; n < i; n++){//loops through the next line in the list to compare
         ops++;
             if(itemList[n].sale == true){
                 if(temp.type == itemList[n].type && temp.sale != itemList[n].sale &&  itemList[n].price>= temp.price){
-                    cout << itemList[n].type << " " << itemList[n].price << endl;
+                    cout << "item read " << temp.type << " cost " << temp.price << endl; // this is printing out the array
+                    cout << temp.type << " " << temp.price << endl;
+                    j++;
                     removeAndShift(itemList, n, i);
                     i--;
                     return true;
@@ -43,7 +55,9 @@ bool isMatch(item itemList[], item temp, int i, int& ops){
             }
             else{
                 if(temp.type == itemList[n].type && temp.sale != itemList[n].sale && temp.price >= itemList[n].price){
-                    cout << temp.type << " " << temp.price << endl;
+                    cout << "item read " << temp.type << " cost " << temp.price << endl; // this is printing out the array
+                    cout << itemList[n].type << " " << itemList[n].price << endl;
+                    j++;
                     removeAndShift(itemList, n, i);
                     i--;
                     return true;
@@ -67,7 +81,7 @@ void readFile(string fName){
     string strline = "";
     while(!infile.eof()){
         getline(infile, strline);
-        //cin.ignore();
+        cin.ignore();
         type = strline.substr(0, strline.find_first_of(','));//this locates the string in the line that is the type
         want = strline.substr(strline.find_first_of(',') + 2);//this locates the string in the line for the sale or want
         if(want[0] == 'f'){// this is to assign a boolean variable to the string/char that was found in the line
@@ -81,15 +95,17 @@ void readFile(string fName){
         temp.price = price;
         temp.type = type;
         temp.sale = sale;
-        isMatch(itemList, temp, i, ops);// this is calling the match function
         if(!isMatch(itemList, temp, i, ops)){
             itemList[i] = temp;
-            
+            cout << "item read " << itemList[i].type << " cost " << itemList[i].price << endl; // this is printing out the array
+            i++;
+
         }
         
-        cout << "item read " << itemList[i].type << " cost " << itemList[i].price << endl; // this is printing out the array
-        i++;
     }
+    //cout << # << endl;
+    //cout << itemList[i].type << endl;
+    //cout << # << endl;
 
     
     
@@ -101,9 +117,6 @@ int main(int argc, const char * argv[]) {
     cout << "Welcome to Craigslist, but not Craiglist. Please enter your filename."<< endl;//opening statement
     getline(cin,fName);// Allows the user to input the filename
     readFile(fName);
-    
-    
-    
-    
+
     return 0;
 }

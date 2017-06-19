@@ -16,22 +16,22 @@
 using namespace std;
 
 
-struct wordItem{
-    string word;
+struct word{
+    string w;
     int count;
     
 };
 
-void arrayDoubling(int uniqueWordCount, int arraySize, wordItem *uniqueWords, int arrayDoublingCount){
-    wordItem *tempWords;
+void doubleArrayAndAdd(int uniqueWordCount, int arraySize, word *uniqueWords, int arrayDoublingCount){
+    word *tempWords;
     if(uniqueWordCount == arraySize){
-        tempWords = new wordItem[2*arraySize];
+        tempWords = new word[2*arraySize];
         
         for (int i = 0; i < arraySize; i++) {
             tempWords[i] = uniqueWords[i];
         }
         delete[] uniqueWords;
-        uniqueWords = new wordItem[2*arraySize];
+        uniqueWords = new word[2*arraySize];
         arraySize = 2*arraySize;
         for(int j = 0; j< arraySize; j++){
             uniqueWords[j] = tempWords[j];
@@ -42,8 +42,10 @@ void arrayDoubling(int uniqueWordCount, int arraySize, wordItem *uniqueWords, in
     }
 }
 
-void sortData(wordItem wordItemList[], int uniqueWordCount, wordItem *uniqueWords){
-    wordItem swap;
+int getArrayDoubling();
+
+void sortData(word wordList[], int uniqueWordCount, word *uniqueWords){
+    word swap;
     for(int i = 0; i < uniqueWordCount; i++)
     {
         for(int j = 0; j < (uniqueWordCount - i); j++)
@@ -59,46 +61,46 @@ void sortData(wordItem wordItemList[], int uniqueWordCount, wordItem *uniqueWord
 
 }
 
-void printResult(int arrayDoubleCount, int uniqueWordCount, int totalWords, int printSize, wordItem *uniqueWords){
+void printResult(int timesDoubled, int uniqueWordCount, int wordCount, int printSize, word *uniqueWords){
     printCommonWords(uniqueWords, printSize);
     cout << "#" << endl;
-    cout << "Array doubled :" << arrayDoubleCount << endl;
+    cout << "Array doubled :" << timesDoubled << endl;
     cout << "#" << endl;
     cout << "Unique non-common words:" << uniqueWordCount << endl;
     cout << "#" << endl;
-    cout << "Total non-common words:" << totalWords << endl;
+    cout << "Total non-common words:" << wordCount << endl;
 };
 
-void printCommonWords(wordItem wordItemList[], int topN)
+void printCommonWords(word wordList[], int topN)
 {
-    wordItem printedArray[topN];
+    word printedArray[topN];
     for(int i = 0; i<topN; i++){
-        printedArray[i].word = wordItemList[i].word;
-        printedArray[i].count = wordItemList[i].count;
+        printedArray[i].w = wordList[i].w;
+        printedArray[i].count = wordList[i].count;
     }
     for(int i = 0; i<topN; i++){
-        cout << printedArray[i].word << printedArray[i].count << endl;
+        cout << printedArray[i].w << printedArray[i].count << endl;
     }
     return;
 }
 
-int getTotalNumberNonCommonWords(wordItem wordItemList[], int uniqueWordCount)
+int getWordCount(word wordList[], int uniqueWordCount)
 {
     int totalCount = 0;
     for(int i = 0; i<uniqueWordCount; i++)
     {
-        totalCount += wordItemList[i].count;
+        totalCount += wordList[i].count;
     }
     return totalCount;
 }
 
-int isUniqueWord(string word, wordItem uniqueWordsList[], int uniqueWordCount)
+int getUniqueWordCount(string word, word uniqueWordsList[], int uniqueWordCount)
 {
     bool alreadyInList = false;
     
     for(int i = 0; i < uniqueWordCount; i++)			//loop through all seen unique words
     {
-        if(uniqueWordsList[i].word == word)					//if hte new unique word is an already seen unique word
+        if(uniqueWordsList[i].w == word)					//if hte new unique word is an already seen unique word
         {
             alreadyInList = true;
             uniqueWordsList[i].count++;
@@ -107,7 +109,7 @@ int isUniqueWord(string word, wordItem uniqueWordsList[], int uniqueWordCount)
     }
     if(!alreadyInList)
     {
-        uniqueWordsList[uniqueWordCount].word = word;
+        uniqueWordsList[uniqueWordCount].w = word;
         uniqueWordsList[uniqueWordCount].count ++;
         return 1;
     }
@@ -115,7 +117,7 @@ int isUniqueWord(string word, wordItem uniqueWordsList[], int uniqueWordCount)
 }
 
 
-bool isCommonWord(string word, vector<string>& _vecIgnoreWords)
+bool checkIfCommonWord(string word, vector<string>& _vecIgnoreWords)
 {
     bool commonWord = false;
     string excludedWords[50] = {"the","be","to","of","and","a","in","that","have","i","it",
@@ -133,17 +135,17 @@ bool isCommonWord(string word, vector<string>& _vecIgnoreWords)
     return commonWord;
 }
 
-void readInFile(string fName){
+bool readDataFile(string fName){
     
-    wordItem *uniqueWords = new wordItem[100];
-    wordItem *tmpWords;
+    word *uniqueWords = new word[100];
+    word *tmpWords;
     
     int arraySize = 100;
     //int printSize = stoi(argv[1]);
     
-    int arrayDoubleCount = 0;   		//counts how many times the array was doubled
+    int timesDoubled = 0;   		//counts how many times the array was doubled
     int uniqueWordCount = 0;
-    int totalWords = 0;
+    int wordCount = 0;
     
     string uniqueLine;
     string uniqueWord;
@@ -170,6 +172,6 @@ int main(int argc, const char * argv[]) {
     int numberOfMostFrequentWords;
     getline(cin, fName); // allows the user to input the filename
     cin >> numberOfMostFrequentWords; // takes input on the number of most frequent words
-    readInFile(fName);
+    readDataFile(fName);
     return 0;
 }

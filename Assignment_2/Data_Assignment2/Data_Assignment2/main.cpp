@@ -13,18 +13,17 @@
 #include <string>
 #include <sstream>
 #include <cstddef>
+#include "WordAnalysis.h"
+
 using namespace std;
 
-
-struct word{
-    string w;
-    int count;
-    
-};
-
-void doubleArrayAndAdd(int uniqueWordCount, int arraySize, word *uniqueWords, int arrayDoublingCount){
+void WordAnalysis::doubleArrayAndAdd(word *uniqueWords){
     word *tempWords;
-    if(uniqueWordCount == arraySize){
+    int timesDoubled = 0;
+    int arraySize = 100;
+    int index = 0;
+    int wordCount = 0;
+    if(index == arraySize){
         tempWords = new word[2*arraySize];
         
         for (int i = 0; i < arraySize; i++) {
@@ -38,17 +37,24 @@ void doubleArrayAndAdd(int uniqueWordCount, int arraySize, word *uniqueWords, in
         }
         delete[] tempWords;
         
-        arrayDoublingCount++;
+        timesDoubled++;
     }
 }
 
-int getArrayDoubling();
+int WordAnalysis::getArrayDoubling(){
+    int timesDoubled = 0;
+    if(WordAnalysis::doubleArrayAndAdd(<#word *uniqueWords#>)){
+        timesDoubled++;
+    }
 
-void sortData(word wordList[], int uniqueWordCount, word *uniqueWords){
+    return timesDoubled;
+};
+
+void WordAnalysis::sortData(){
     word swap;
-    for(int i = 0; i < uniqueWordCount; i++)
+    for(int i = 0; i < index; i++)
     {
-        for(int j = 0; j < (uniqueWordCount - i); j++)
+        for(int j = 0; j < (index - i); j++)
         {
             if(uniqueWords[j].count < uniqueWords[j+1].count)
             {
@@ -61,17 +67,17 @@ void sortData(word wordList[], int uniqueWordCount, word *uniqueWords){
 
 }
 
-void printResult(int timesDoubled, int uniqueWordCount, int wordCount, int printSize, word *uniqueWords){
+void WordAnalysis::printResult(int ){
     printCommonWords(uniqueWords, printSize);
     cout << "#" << endl;
     cout << "Array doubled :" << timesDoubled << endl;
     cout << "#" << endl;
-    cout << "Unique non-common words:" << uniqueWordCount << endl;
+    cout << "Unique non-common words:" << index << endl;
     cout << "#" << endl;
-    cout << "Total non-common words:" << wordCount << endl;
-};
+    cout << "Total non-common words:" << getWordCount(); << endl;
+}
 
-void printCommonWords(word wordList[], int topN)
+void WordAnalysis::printCommonWords(int topN)
 {
     word printedArray[topN];
     for(int i = 0; i<topN; i++){
@@ -79,26 +85,27 @@ void printCommonWords(word wordList[], int topN)
         printedArray[i].count = wordList[i].count;
     }
     for(int i = 0; i<topN; i++){
-        cout << printedArray[i].w << printedArray[i].count << endl;
+        cout << printedArray[i].w << " - " << printedArray[i].count << endl;
     }
     return;
 }
 
-int getWordCount(word wordList[], int uniqueWordCount)
+int WordAnalysis::getWordCount()
 {
     int totalCount = 0;
-    for(int i = 0; i<uniqueWordCount; i++)
+    for(int i = 0; i<index; i++)
     {
         totalCount += wordList[i].count;
     }
     return totalCount;
 }
 
-int getUniqueWordCount(string word, word uniqueWordsList[], int uniqueWordCount)
+int WordAnalysis::getUniqueWordCount()
 {
     bool alreadyInList = false;
+    int index = 0;
     
-    for(int i = 0; i < uniqueWordCount; i++)			//loop through all seen unique words
+    for(int i = 0; i < index; i++)			//loop through all seen unique words
     {
         if(uniqueWordsList[i].w == word)					//if hte new unique word is an already seen unique word
         {
@@ -109,15 +116,15 @@ int getUniqueWordCount(string word, word uniqueWordsList[], int uniqueWordCount)
     }
     if(!alreadyInList)
     {
-        uniqueWordsList[uniqueWordCount].w = word;
-        uniqueWordsList[uniqueWordCount].count ++;
+        uniqueWordsList[index].w = word;
+        uniqueWordsList[index].count ++;
         return 1;
     }
-    return 0;
+    return index;
 }
 
 
-bool checkIfCommonWord(string word, vector<string>& _vecIgnoreWords)
+bool WordAnalysis::checkIfCommonWord(string word)//call this function to make sure not to add these words to the list of common words
 {
     bool commonWord = false;
     string excludedWords[50] = {"the","be","to","of","and","a","in","that","have","i","it",
@@ -135,23 +142,14 @@ bool checkIfCommonWord(string word, vector<string>& _vecIgnoreWords)
     return commonWord;
 }
 
-bool readDataFile(string fName){
-    
+bool WordAnalysis::readDataFile(string fName){//use this function to read the fie
+    bool fileRead = true;
     word *uniqueWords = new word[100];
     word *tmpWords;
-    
-    int arraySize = 100;
-    //int printSize = stoi(argv[1]);
-    
-    int timesDoubled = 0;   		//counts how many times the array was doubled
-    int uniqueWordCount = 0;
-    int wordCount = 0;
-    
     string uniqueLine;
     string uniqueWord;
     ifstream infile;
     infile.open(fName);//open the file that the user passes
-    
     if(infile.is_open()){
         //get the individual line from the file
         while(getline(infile, uniqueLine))
@@ -160,15 +158,34 @@ bool readDataFile(string fName){
             
             //get the individual word from the line
             while(ss >> uniqueWord){
+                WordAnalysis::doubleArrayAndAdd(<#word *uniqueWords#>);
+                if(WordAnalysis::checkIfCommonWord(uniqueWord) == true){
+                    //I DON'T WANT IT IN THE ARRAY
+                }
+                
+                else{
+                    // I WANT IT IN THE ARRAY
+                    WordAnalysis::getUniqueWordCount(uniqueWord);
+                    wordCount++;
+                }
                 //arraydoubling goes here
             }
-    }
+        }
 
+    }
+    
+    else{
+        cout << "file didn't open"<< endl;
+        fileRead = false;
+    }
+    WordAnalysis::sortData(<#word *uniqueWords#>)
+    return fileRead;
 }
 
 int main(int argc, const char * argv[]) {
     // insert code here...
     string fName = "";
+    char* fileN = fName; 
     int numberOfMostFrequentWords;
     getline(cin, fName); // allows the user to input the filename
     cin >> numberOfMostFrequentWords; // takes input on the number of most frequent words

@@ -17,7 +17,7 @@
 
 using namespace std;
 
-void WordAnalysis::doubleArrayAndAdd(string nWord){//doi
+void WordAnalysis::doubleArrayAndAdd(string nWord){//This is the function that is used to double the size of the array when full. As well as add.
     if(index == wordCount){
         
         word *tempWords = new word[2*wordCount];
@@ -47,12 +47,12 @@ void WordAnalysis::doubleArrayAndAdd(string nWord){//doi
     words[index] = temp;
 }
 
-int WordAnalysis::getArrayDoubling(){
+int WordAnalysis::getArrayDoubling(){ // this is the function that returns the number of times the array was doubled
    
     return timesDoubled;
 }
 
-void WordAnalysis::sortData(){
+void WordAnalysis::sortData(){//sorts the array into the words that were used the most in order to print them later
     word swap;
     for(int i = 0; i < index; i++)
     {
@@ -69,7 +69,7 @@ void WordAnalysis::sortData(){
 
 }
 
-void WordAnalysis::printResult(int num){
+void WordAnalysis::printResult(int num){ // prints out the results of the program
     printCommonWords(num);
     cout << "#" << endl;
     cout << "Array doubled :" << timesDoubled << endl;
@@ -80,15 +80,9 @@ void WordAnalysis::printResult(int num){
 }
 
 void WordAnalysis::printCommonWords(int topN){
-    word *printedArray = new word[topN];
     for(int i = 0; i<topN; i++){
-        printedArray[i].w = words[i].w;
-        printedArray[i].count = words[i].count;
+        cout << words[i].count << " - " << words[i].w << endl;
     }
-    for(int i = 0; i<topN; i++){
-        cout << printedArray[i].w << " - " << printedArray[i].count << endl;
-    }
-    return;
 }
 
 int WordAnalysis::getWordCount()
@@ -133,8 +127,7 @@ bool WordAnalysis::readDataFile(char *fName){//use this function to read the fie
     infile.open(fName);//open the file that the user passes
     if(infile.is_open()){
         //get the individual line from the file
-        while(getline(infile, uniqueLine))
-        {
+        while(getline(infile, uniqueLine)){
             stringstream ss(uniqueLine);
             
             //get the individual word from the line
@@ -174,15 +167,15 @@ bool WordAnalysis::readDataFile(char *fName){//use this function to read the fie
 }
 
 WordAnalysis::WordAnalysis(int zane){
-    words = new word[100];
-    wordCount = 0;
+    words = new word[zane];
+    wordCount = zane;
     index = 0;
     timesDoubled = 0;
-};
+}
 
 WordAnalysis::~WordAnalysis(){
     delete[] words;
-};
+}
 int main(int argc, const char * argv[]) {
     string fName = "";
     int numberOfMostFrequentWords;
@@ -193,7 +186,6 @@ int main(int argc, const char * argv[]) {
     WordAnalysis wa(defaultsize);
     char* fileN = (char*)fName.c_str();
     wa.readDataFile(fileN);
-    wa.printCommonWords(numberOfMostFrequentWords);
     wa.printResult(numberOfMostFrequentWords);
     return 0;
 }

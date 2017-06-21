@@ -24,11 +24,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Data_Assignment2/main.cpp"
-            timestampString = "519694175.73344"
+            timestampString = "519717051.452667"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "main(int argc, const char * argv[])"
             landmarkType = "9">
          </BreakpointContent>
@@ -40,12 +40,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Data_Assignment2/main.cpp"
-            timestampString = "519693601.556976"
+            timestampString = "519717051.452667"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "178"
-            endingLineNumber = "178"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
             landmarkName = "WordAnalysis::WordAnalysis(int zane)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Data_Assignment2/main.cpp"
+            timestampString = "519714579.994215"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
+            landmarkName = "WordAnalysis::readDataFile(char *fName)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Data_Assignment2/main.cpp"
+            timestampString = "519717092.349135"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
+            landmarkName = "WordAnalysis::readDataFile(char *fName)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

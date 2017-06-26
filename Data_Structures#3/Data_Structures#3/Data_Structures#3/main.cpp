@@ -18,8 +18,7 @@ using namespace std;
 
 
 void CommunicationNetwork::addCity(string newCityName, string previousCityName){
-    City *newCity = new City(newCityName, NULL,
-                             City *initPrevious=nullptr, std::string initMessage=""):
+    City *newCity = new City(newCityName, NULL, NULL, "");
     
     
     if(previousCityName == "First"){//Case # 1 if they want to put the new city in front
@@ -28,7 +27,7 @@ void CommunicationNetwork::addCity(string newCityName, string previousCityName){
         head = newCity;
     }
     for(City *i = head; i != NULL; i = i -> next){
-        if(i->name == previousCityName){
+        if(i-> cityName == previousCityName){
             if(i->next == NULL){//Case #2 if they want to put the new city at the end;
                 City *temp = i;
                 i -> next = newCity;
@@ -47,6 +46,12 @@ void CommunicationNetwork::addCity(string newCityName, string previousCityName){
 
 void CommunicationNetwork::buildNetwork(){
     //build the network I have no idea how to do this
+    string linus [6] = {"Miami" ,"New York", "Chicago", "Seattle", "Denver", "Dallas"};
+    head->cityName = linus[0];
+    for(int i = 1; i < 5; i++){
+        addCity(linus[i+1], linus[i]);
+    }
+    tail->cityName = linus[5];
     
     
     
@@ -66,7 +71,7 @@ void CommunicationNetwork::transmitMsg(string filename){
 void CommunicationNetwork::printNetwork(){
     cout << "===CURRENT PATH===" << endl;
     for(City *tmp = head; tmp != NULL; tmp = tmp-> next){
-        cout << tmp->name << " -> ";   //for all nodes in network
+        cout << tmp->cityName << " -> ";   //for all nodes in network
     }
     cout << "nullptr" << endl;
     cout << "==================" << endl;
@@ -74,7 +79,7 @@ void CommunicationNetwork::printNetwork(){
 
 void CommunicationNetwork::deleteCity(string removeCity){
     for(City *i = head; i != NULL; i = i-> next){
-        if(removeCity == i->name){
+        if(removeCity == i->cityName){
             if(head == i){
                 City *temp = head;
                 head = i -> next;
@@ -88,6 +93,7 @@ void CommunicationNetwork::deleteCity(string removeCity){
             else{
                 City *temp = i;
                 (i->previous) -> next = i -> next;
+                (i->next)->previous = i->previous;
                 delete[] temp;
             }
         }
@@ -95,16 +101,26 @@ void CommunicationNetwork::deleteCity(string removeCity){
             cout<< cityNameIn << "not found" <<endl;
         }
 }
-
+}
 void CommunicationNetwork::deleteNetwork(){
     for(City *tmp = head; tmp != NULL; tmp = tmp -> next){
         delete[] tmp;
         cout<<"deleting "<<tmp->cityName<<endl; //for all nodes in network
     }
 }
-CommunicationNetwork::CommunicationNetwork(){}
-CommunicationNetwork::~CommunicationNetwork(){}
+CommunicationNetwork::CommunicationNetwork(){
+    head = NULL;
+    tail = NULL;
 
+}
+CommunicationNetwork::~CommunicationNetwork(){
+
+    delete[] head;
+    delete[] tail;
+
+}
+
+CommunicationNetwork charles;
 int main(int argc, const char * argv[]) {
     // insert code here...
     
@@ -177,4 +193,4 @@ int main(int argc, const char * argv[]) {
     }
     
     return 0;
-};
+}

@@ -18,8 +18,8 @@ using namespace std;
 
 
 void CommunicationNetwork::addCity(string newCityName, string previousCityName){
-    City *newCity = new City;
-    newCity -> name = newCityName;
+    City *newCity = new City(newCityName, NULL, NULL, "");
+    
     
     if(previousCityName == "First"){//Case # 1 if they want to put the new city in front
         City *temp = head;
@@ -27,7 +27,7 @@ void CommunicationNetwork::addCity(string newCityName, string previousCityName){
         head = newCity;
     }
     for(City *i = head; i != NULL; i = i -> next){
-        if(i->name == previousCityName){
+        if(i-> cityName == previousCityName){
             if(i->next == NULL){//Case #2 if they want to put the new city at the end;
                 City *temp = i;
                 i -> next = newCity;
@@ -45,10 +45,12 @@ void CommunicationNetwork::addCity(string newCityName, string previousCityName){
 }
 
 void CommunicationNetwork::buildNetwork(){
-    //build the network I have no idea how to do this
-    
-    
-    
+    string linus [6] = {"Miami" ,"New York", "Chicago", "Seattle", "Denver", "Dallas"};
+    head->cityName = linus[0];
+    for(int i = 1; i < 5; i++){
+        addCity(linus[i+1], linus[i]);
+    }
+    tail->cityName = linus[5];
     
     printNetwork();
 }
@@ -64,16 +66,21 @@ void CommunicationNetwork::transmitMsg(string filename){
 
 void CommunicationNetwork::printNetwork(){
     cout << "===CURRENT PATH===" << endl;
+    cout << "NULL <- ";
     for(City *tmp = head; tmp != NULL; tmp = tmp-> next){
-        cout << tmp->name << " -> ";   //for all nodes in network
+        if(tmp -> next == NULL){
+            cout << tmp->cityName;
+            break;
+        }
+        cout << tmp->cityName << " <-> ";   //for all nodes in network
     }
-    cout << "nullptr" << endl;
+    cout << " -> NULL" << endl;
     cout << "==================" << endl;
 }
 
 void CommunicationNetwork::deleteCity(string removeCity){
     for(City *i = head; i != NULL; i = i-> next){
-        if(removeCity == i->name){
+        if(removeCity == i->cityName){
             if(head == i){
                 City *temp = head;
                 head = i -> next;
@@ -87,6 +94,7 @@ void CommunicationNetwork::deleteCity(string removeCity){
             else{
                 City *temp = i;
                 (i->previous) -> next = i -> next;
+                (i->next)->previous = i->previous;
                 delete[] temp;
             }
         }
@@ -94,19 +102,28 @@ void CommunicationNetwork::deleteCity(string removeCity){
             cout<< cityNameIn << "not found" <<endl;
         }
 }
-
+}
 void CommunicationNetwork::deleteNetwork(){
     for(City *tmp = head; tmp != NULL; tmp = tmp -> next){
         delete[] tmp;
         cout<<"deleting "<<tmp->cityName<<endl; //for all nodes in network
     }
 }
-CommunicationNetwork::CommunicationNetwork(){}
-CommunicationNetwork::~CommunicationNetwork(){}
+CommunicationNetwork::CommunicationNetwork(){
+    head = NULL;
+    tail = NULL;
+
+}
+CommunicationNetwork::~CommunicationNetwork(){
+
+    delete[] head;
+    delete[] tail;
+
+}
+
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    
     cout << "======Main Menu======" << endl;
     cout << "1. Build Network" << endl;
     cout << "2. Print Network Path" << endl;
@@ -125,7 +142,8 @@ int main(int argc, const char * argv[]) {
         switch(input){
                 //if the user chooses #1 then this case runs building and printing the network after
             case 1:
-                
+                CommunicationNetwork *charles = new CommunicationNetwork();
+
                 
                 //if the user chooses #2 then this case runs printing the network path
             case 2:

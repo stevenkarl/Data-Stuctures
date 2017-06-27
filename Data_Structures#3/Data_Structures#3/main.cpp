@@ -23,21 +23,23 @@ void CommunicationNetwork::addCity(string newCityName, string previousCityName){
     
     if(previousCityName == "First"){//Case # 1 if they want to put the new city in front
         City *temp = head;
-        newCity -> next = temp;
         head = newCity;
+        newCity -> next = temp;
+        head -> next = newCity -> next;
+        
     }
     for(City *i = head; i != NULL; i = i -> next){
         if(i-> cityName == previousCityName){
             if(i->next == NULL){//Case #2 if they want to put the new city at the end;
-                City *temp = i;
                 i -> next = newCity;
-                newCity->next = NULL;
-                newCity -> previous = temp;
+                newCity -> previous = i;
             }
             else{                           //Case # 3 if they want to put the new city in the middle
                 City *temp = i -> next;
                 i -> next = newCity;
                 newCity ->next = temp;
+                newCity -> previous = i;
+                temp -> previous = newCity;
             }
         
         }
@@ -55,15 +57,35 @@ void CommunicationNetwork::buildNetwork(){
     printNetwork();
 }
 void CommunicationNetwork::transmitMsg(string filename){
+    if(head == NULL){
+        cout << "Empty list" << endl;
+        return;
+    }
+    ifstream fs(filename);
+    string str = "";
+    while(!fs.eof()){
+        fs >> str;
+        for(City *i = head; i!= NULL; i = i-> next){
+            if(i == head){
+                i -> message += str;
 
-    cout<<sender->cityName<<" received "<<sender-message<<endl;
-    //if network not built yet, head = nullptr
-    cout << "Empty list" << endl;
-
-
-
+            }
+            else{
+                i -> message += " " + str;
+            }
+            
+            cout<< i-> cityName << " received " << str <<endl;
+        
+        }
+    }
+    fs.close();
+    for(City *i = head; i!= NULL; i = i-> next){
+        if(i -> next == NULL){
+            break;
+        }
+        i -> message = " ";
 }
-
+}
 void CommunicationNetwork::printNetwork(){
     cout << "===CURRENT PATH===" << endl;
     cout << "NULL <- ";
@@ -99,14 +121,14 @@ void CommunicationNetwork::deleteCity(string removeCity){
             }
         }
         else{
-            cout<< cityNameIn << "not found" <<endl;
+            cout<< removeCity << "not found" <<endl;
         }
 }
 }
 void CommunicationNetwork::deleteNetwork(){
     for(City *tmp = head; tmp != NULL; tmp = tmp -> next){
         delete[] tmp;
-        cout<<"deleting "<<tmp->cityName<<endl; //for all nodes in network
+        cout<< "deleting "<< tmp->cityName << endl; //for all nodes in network
     }
 }
 CommunicationNetwork::CommunicationNetwork(){
@@ -134,64 +156,71 @@ int main(int argc, const char * argv[]) {
     cout << "7. Quit" << endl;
     
     string choice = " ";
+    bool quit = true;
     int input;
-    while(input != 7 ) { // loop until the user decides to quit
+    while(quit == true) { // loop until the user decides to quit
         getline(cin, choice);
         input = stoi(choice);
-        
+        CommunicationNetwork *charles = new CommunicationNetwork();
+
         switch(input){
                 //if the user chooses #1 then this case runs building and printing the network after
-            case 1:
-                CommunicationNetwork *charles = new CommunicationNetwork();
-
-                
-                //if the user chooses #2 then this case runs printing the network path
-            case 2:
-                printNetwork();
+            case 1:{
+                charles = new CommunicationNetwork();
+                charles->buildNetwork();
                 break;
-                
+            }
+                //if the user chooses #2 then this case runs printing the network path
+            case 2:{
+                charles->printNetwork();
+                break;
+            }
                 //if the user chooses #3 then this case runs transmitting the message from city to city
-            case 3:
+            case 3:{
                 string fName = "";
                 cout << "Enter name of file: " << endl;
                 getline(cin, fName);
-                transmitMsg(fName);
+                charles->transmitMsg(fName);
                 break;
                 //if the user chooses #4 then this case runs adding a city to the linked list of cities
-            case 4:
+            }
+            case 4:{
                 string newCityName = " ";
                 string prevCityName = " ";
                 cout << "Enter a city name: " << endl;
                 getline(cin, newCityName);
                 cout << "Enter a previous city name: " << endl;
                 getline(cin, prevCityName);
-                
-                
-                addCity(newCityName, previousCityName);
-                
+                charles->addCity(newCityName, prevCityName);
                 break;
-                
+            }
                 //if the user chooses #5 then this case runs deleting a specified city from the network
-            case 5:
+            case 5:{
                 string removeCity = " ";
                 cout << "Enter a city name: " << endl;
                 getline(cin, removeCity);
                 
-                deleteCity(removeCity);
-                
+                charles->deleteCity(removeCity);
                 break;
+            }
 
                 
                 //if the user chooses #6 then this case runs and the entire network is cleared
-            case 6:
-                deleteNetwork();
+            case 6:{
+                charles-> deleteNetwork();
                 
                 break;
+            }
+                
+            case 7:{
+                quit = false;
+                cout << "Goodbye!" << endl;
+            }
         }
     }
-    if(input == 7){
-        cout << "Goodbye!" << endl;
-    }
+    
+    
+    
     
     return 0;
 }

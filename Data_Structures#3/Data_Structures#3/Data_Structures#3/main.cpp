@@ -16,114 +16,169 @@
 #include "CommunicationNetwork.h"
 using namespace std;
 
-
-void CommunicationNetwork::addCity(string newCityName, string previousCityName){
+/**This is the addCity function that takes in user input and adds a city to the current network
+ @param string newCityName: which is the name of the new city that we want to add to the list
+ @param string previousCityName: which is the name of the city that comes before the place that you wish to add the new city
+ */
+void CommunicationNetwork::addCity (string newCityName, string previousCityName) {
     City *newCity = new City(newCityName, NULL, NULL, "");
     
-    
-    if(previousCityName == "First"){//Case # 1 if they want to put the new city in front
-        City *temp = head;
-        newCity -> next = temp;
-        head = newCity;
+    if (head->cityName == "") {
+        head =  newCity;
+        return;
     }
-    for(City *i = head; i != NULL; i = i -> next){
-        if(i-> cityName == previousCityName){
-            if(i->next == NULL){//Case #2 if they want to put the new city at the end;
-                City *temp = i;
+    if (previousCityName == "First") {//Case # 1 if they want to put the new city in front
+        City *temp = head;
+        head = newCity;
+        
+        newCity -> next = temp;
+        head -> next = newCity -> next;
+    }
+    for (City *i = head; i != NULL; i = i -> next) {
+        if (i-> cityName == previousCityName) {
+            if (i->next == NULL) {//Case #2 if they want to put the new city at the end;
                 i -> next = newCity;
-                newCity->next = NULL;
-                newCity -> previous = temp;
-            }
-            else{                           //Case # 3 if they want to put the new city in the middle
+                newCity -> previous = i;
+            } else {                           //Case # 3 if they want to put the new city in the middle
                 City *temp = i -> next;
                 i -> next = newCity;
                 newCity ->next = temp;
+                newCity -> previous = i;
+                temp -> previous = newCity;
             }
-        
         }
     }
 }
 
-void CommunicationNetwork::buildNetwork(){
-    //build the network I have no idea how to do this
-    string linus [6] = {"Miami" ,"New York", "Chicago", "Seattle", "Denver", "Dallas"};
-    head->cityName = linus[0];
-    for(int i = 1; i < 5; i++){
-        addCity(linus[i+1], linus[i]);
+/**
+ This function is buildNetwork and it is used to setup the initial network that we will preform other functions on
+ */
+void CommunicationNetwork::buildNetwork () {
+    City linus [7] = {City(""), City("Miami") , City("New York"), City("Chicago"), City("Seattle"), City("Denver"), City("Dallas")};
+    for (int i = 0; i < 6; i++) {
+        addCity(linus[i+1].cityName, linus[i].cityName);
     }
-    tail->cityName = linus[5];
-    
-    
-    
-    
+    for (City* i = head; i != NULL; i = i->next) {
+        if (i->next == NULL) {
+            tail = i;
+        }
+    }
     printNetwork();
 }
-void CommunicationNetwork::transmitMsg(string filename){
 
-    cout<<sender->cityName<<" received "<<sender-message<<endl;
-    //if network not built yet, head = nullptr
-    cout << "Empty list" << endl;
-
-
-
+/**This is the transmitMsg function that reads in a txt file and passes its contents from one city to the next until the end.
+ @param string filename: This is the name of the file that we are reading from and passing from city to city.
+ */
+void CommunicationNetwork::transmitMsg (string filename) {
+    if (head == NULL) {
+        cout << "Empty list" << endl;
+        return;
+    }
+    ifstream fs(filename);
+    string str = "";
+    while (!fs.eof()) {
+        fs >> str;
+        for (City *i = head; i!= NULL; i = i-> next) {
+            if (i == head) {
+                i -> message += str;
+            } else {
+                i -> message += " " + str;
+            }
+            cout<< i-> cityName << " received " << str <<endl;
+        }
+    }
+    fs.close();
+    for (City *i = head; i!= NULL; i = i-> next) {
+        if (i -> next == NULL) {
+            break;
+        }
+        i -> message = " ";
+    }
 }
 
-void CommunicationNetwork::printNetwork(){
+/**This is the printNetwork function in which we print out the network as it currently is depending on the operations that we preformed
+ */
+void CommunicationNetwork::printNetwork () {
     cout << "===CURRENT PATH===" << endl;
-    for(City *tmp = head; tmp != NULL; tmp = tmp-> next){
-        cout << tmp->cityName << " -> ";   //for all nodes in network
+    cout << "NULL <- ";
+    for (City *tmp = head; tmp != NULL; tmp = tmp-> next) {
+        if (tmp -> next == NULL) {
+            cout << tmp->cityName;
+            break;
+        }
+        cout << tmp->cityName << " <-> ";   //for all nodes in network
     }
-    cout << "nullptr" << endl;
+    cout << " -> NULL" << endl;
     cout << "==================" << endl;
 }
 
-void CommunicationNetwork::deleteCity(string removeCity){
-    for(City *i = head; i != NULL; i = i-> next){
-        if(removeCity == i->cityName){
-            if(head == i){
-                City *temp = head;
-                head = i -> next;
-                delete[] temp;
-            }
-            else if(i->next == NULL){
-                City *temp = i;
-                (i -> previous) -> next = NULL;
-                delete[] temp;
-            }
-            else{
-                City *temp = i;
-                (i->previous) -> next = i -> next;
-                (i->next)->previous = i->previous;
-                delete[] temp;
-            }
+/**This is the deleteCity function that takes the user input city and removes it from the current network
+ @param string removeCity is the city being passed by the user that we wish to remove;
+ */
+void CommunicationNetwork::deleteCity (string removeCity) {
+    // first we check if we're removing the head
+    if (head->cityName == removeCity) {
+        City* temp = head;
+        head = head->next;
+        head->previous = temp->previous;
+        delete temp;
+    }
+    // second we check if we are removing the tail
+    else if (tail->cityName == removeCity) {
+        City* temp = tail;
+        tail = tail->previous;
+        tail->next = temp->next;
+        delete temp;
+    } else { // Now we check if we are removing from the middle
+            for (City* i = head; i != NULL; i = i->next) {
+                if (removeCity == i->cityName) {
+                    // We do the same as for remvoing the head
+                    City* temp = i;
+                    i = i->next;
+                    i->previous = temp->previous;
+                    // We do the same as for removing the tail
+                    City* temp2 = temp;
+                    temp = temp->previous;
+                    temp->next = temp2->next;
+                    // In order to prevent memory leak
+                    delete temp;
+                    delete temp2;
+                }
+                if(i->next == NULL){
+                    cout<< removeCity << " not found" <<endl;
+                }
         }
-        else{
-            cout<< cityNameIn << "not found" <<endl;
-        }
-}
-}
-void CommunicationNetwork::deleteNetwork(){
-    for(City *tmp = head; tmp != NULL; tmp = tmp -> next){
-        delete[] tmp;
-        cout<<"deleting "<<tmp->cityName<<endl; //for all nodes in network
     }
 }
-CommunicationNetwork::CommunicationNetwork(){
-    head = NULL;
-    tail = NULL;
 
+/**
+ This is the deleteNetwork function that loops through the network and clears all of the cities so that we can start from scratch.
+ */
+void CommunicationNetwork::deleteNetwork () {
+    for (City *tmp = head; tmp != NULL; tmp = tmp -> next) {
+        cout<< "deleting "<< tmp->cityName << endl; //for all nodes in network
+        delete tmp;
+        }
 }
-CommunicationNetwork::~CommunicationNetwork(){
 
-    delete[] head;
-    delete[] tail;
-
+/**
+ This is the constructor where we intilize the head and the tail of the network.
+ */
+CommunicationNetwork::CommunicationNetwork () {
+    head = new City("",NULL,NULL,"");
+    tail = new City("",NULL,NULL,"");
 }
 
-CommunicationNetwork charles;
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    
+/**
+ This is the destructor where we loop through and delete the list.
+ */
+CommunicationNetwork::~CommunicationNetwork () {
+    for (City* i = head; i != NULL; i = i->next) {
+        delete i;
+    }
+}
+
+int main() {
     cout << "======Main Menu======" << endl;
     cout << "1. Build Network" << endl;
     cout << "2. Print Network Path" << endl;
@@ -133,64 +188,71 @@ int main(int argc, const char * argv[]) {
     cout << "6. Clear Network" << endl;
     cout << "7. Quit" << endl;
     
-    string choice = " ";
+    string choice = "";
+    bool quit = true;
     int input;
-    while(input != 7 ) { // loop until the user decides to quit
+    CommunicationNetwork *charles = new CommunicationNetwork();
+    while(quit == true) { // loop until the user decides to quit
         getline(cin, choice);
         input = stoi(choice);
-        
         switch(input){
-                //if the user chooses #1 then this case runs building and printing the network after
-            case 1:
                 
+                //if the user chooses #1 then this case runs building and printing the network after
+            case 1:{
+                charles = new CommunicationNetwork();
+                charles->buildNetwork();
+                break;
+            }
                 
                 //if the user chooses #2 then this case runs printing the network path
-            case 2:
-                printNetwork();
+            case 2:{
+                charles->printNetwork();
                 break;
+            }
                 
                 //if the user chooses #3 then this case runs transmitting the message from city to city
-            case 3:
+            case 3:{
                 string fName = "";
                 cout << "Enter name of file: " << endl;
                 getline(cin, fName);
-                transmitMsg(fName);
+                charles->transmitMsg(fName);
                 break;
+            }
+                
                 //if the user chooses #4 then this case runs adding a city to the linked list of cities
-            case 4:
+            case 4:{
                 string newCityName = " ";
                 string prevCityName = " ";
                 cout << "Enter a city name: " << endl;
                 getline(cin, newCityName);
                 cout << "Enter a previous city name: " << endl;
                 getline(cin, prevCityName);
-                
-                
-                addCity(newCityName, previousCityName);
-                
+                charles->addCity(newCityName, prevCityName);
                 break;
+            }
                 
                 //if the user chooses #5 then this case runs deleting a specified city from the network
-            case 5:
+            case 5:{
                 string removeCity = " ";
                 cout << "Enter a city name: " << endl;
                 getline(cin, removeCity);
                 
-                deleteCity(removeCity);
-                
+                charles->deleteCity(removeCity);
                 break;
-
+            }
                 
                 //if the user chooses #6 then this case runs and the entire network is cleared
-            case 6:
-                deleteNetwork();
-                
+            case 6:{
+                charles->deleteNetwork();
                 break;
+            }
+                
+                //if the user chooses #7 then they have quit
+            case 7:{
+                quit = false;
+                cout << "Goodbye!" << endl;
+            }
         }
     }
-    if(input == 7){
-        cout << "Goodbye!" << endl;
-    }
-    
     return 0;
 }

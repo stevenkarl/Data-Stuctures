@@ -121,6 +121,31 @@ void MovieTree::findMovie(string title)
     }
 }
 ///////////////////////////////////
+//This is the function to find the movie but a different way recursively
+MovieNode* MovieTree::findMovie(MovieNode *node, int searchKey)
+{
+    if(node == nullptr)
+    {
+        return nullptr;
+    }
+    if(node -> key = searchKey)
+    {
+        return node;
+    }
+    else if(node -> key > searchKey)
+    {
+        return findMovie(node -> left, searchKey);
+    }
+    else
+    {
+        return findMovie(node -> right, searchKey);
+    }
+}
+MovieNode* MovieTree::find(int searchKey)
+{
+    return findMovie(root, searchKey);
+}
+///////////////////////////////////
 //This is the function to rent a movie from the inventory
 void MovieTree::rentMovie(string title)
 {

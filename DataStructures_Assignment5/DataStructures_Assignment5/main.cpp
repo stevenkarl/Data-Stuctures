@@ -20,8 +20,8 @@ struct MovieNode
     string title;
     int year;
     int quantity;
-    MovieNode *rightChild;
-    MovieNode *leftChild;
+    MovieNode *right;
+    MovieNode *left;
     MovieNode *parent;
     
     MovieNode(){};
@@ -64,7 +64,7 @@ void MovieTree::findMovie(string title){};
 void MovieTree::rentMovie(string title){};
 void MovieTree::deleteMovie(MovieNode *root, string title){};
 void MovieTree::getMovieCount(){};
-MovieNode* MovieTree::findMinimum(MovieNode *node);
+MovieNode* MovieTree::findMinimum(MovieNode *node){return node;};
 void MovieTree::postDelete(MovieNode * node){};
 
 

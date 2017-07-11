@@ -151,3 +151,44 @@ void MovieTree::rentMovie(string title)
 {
 
 }
+//////////////////////////////////
+//
+void MovieTree::addMovieNode(int ranking, std::string title, int releaseYear, int quantity){
+    MovieNode * tmp = new MovieNode(ranking, title, releaseYear, quantity);
+    tmp->leftChild = NULL;
+    tmp->rightChild = NULL;
+    MovieNode * child = root;
+    MovieNode * parent = NULL;
+    
+    if(ranking == 1)
+    {
+        root = tmp;
+        root->parent = NULL;
+        root->leftChild = NULL;
+        root->rightChild = NULL;
+        return;
+    }
+    else
+    {
+        while(child != NULL){
+            parent = child;
+            if(tmp->title.compare(child->title)<0){
+                child = child->leftChild;
+            }
+            else{
+                child = child->rightChild;
+            }
+        }
+        tmp->parent = parent;
+        if(tmp->title.compare(parent->title)<0)
+        {
+            tmp->parent->leftChild = tmp;
+        }
+        else
+        {
+            tmp->parent->rightChild = tmp;
+        }
+        return;
+    }
+}
+

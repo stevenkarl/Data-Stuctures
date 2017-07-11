@@ -46,29 +46,161 @@ class MovieTree
         void findMovie(string title);
         void rentMovie(string title);
         void deleteMovie(MovieNode *root, string title);
-        void getMovieCount();
+        int getMovieCount(MovieNode *node);
         MovieNode* findMinimum(MovieNode *node);
+        MovieNode* getRoot()
+        {
+            return root;
+        }
     
     private:
         MovieNode *root;
-        void printMovieInventory(MovieNode * node);
-        void postDelete(MovieNode * node );
+        void printInOrder(MovieNode *node);
+        void postDelete(MovieNode *node);
+        void deleteAll(MovieNode *node);
+   
 };
 
 MovieTree * handleUserInput(MovieTree * movieTree);
 void displayMenu();
 void MovieTree::printMovieInventory(){};
-void MovieTree::printMovieInventory(MovieNode * node){};
-void MovieTree::addMovieNode(int ranking, string title, int releaseYear, int quantity){};
-void MovieTree::findMovie(string title){};
+
+void MovieTree::printInOrder(MovieNode *node)
+{
+    if(node == nullptr)
+    {
+        return;
+    }
+    if(node -> left != nullptr)
+    {
+        printInOrder(node -> left);
+    }
+    cout<<"Movie: "<<node->title<<" "<<node->quantity<<endl;
+    if(node -> right != nullptr)
+    {
+        printInOrder(node -> right);
+    }
+    return;
+}
+
+void MovieTree::addMovieNode(int ranking, std::string title, int releaseYear, int quantity){
+    MovieNode * newNode = new MovieNode(ranking, title, releaseYear, quantity);
+    newNode->left = NULL;
+    newNode->right = NULL;
+    MovieNode * index = root;
+    MovieNode * index_parent = NULL;
+    
+    if(ranking == 1)
+    {
+        root = newNode;
+        root->parent = NULL;
+        root->left = NULL;
+        root->right = NULL;
+        return;
+    }
+    else
+    {
+        while(index != NULL){
+            index_parent = index;
+            if(newNode->title.compare(index->title)<0){
+                index = index->left;
+            }
+            else{
+                index = index->right;
+            }
+        }
+        newNode->parent = index_parent;
+        if(newNode->title.compare(index_parent->title)<0)
+        {
+            newNode->parent->left = newNode;
+        }
+        else
+        {
+            newNode->parent->right = newNode;
+        }
+        return;
+    }
+}
+
+void MovieTree::findMovie(string title)
+{
+    MovieNode *foundMovie = root;
+    if(foundMovie == nullptr)
+    {
+        cout << "Movie not found." << endl;
+    }
+    else
+    {
+        while(foundMovie != nullptr)
+        {
+            if(foundMovie -> title.compare(title) == 0)
+            {
+                cout << "Movie Info:" << endl;
+                cout << "===========" << endl;
+                cout << "Ranking:" << foundMovie->ranking << endl;
+                cout << "Title:" << foundMovie->title << endl;
+                cout << "Year:" << foundMovie->year << endl;
+                cout << "Quantity:" << foundMovie->quantity << endl;
+                break;
+            }
+            else if(foundMovie -> title.compare(title) > 0)
+            {
+                foundMovie = foundMovie -> left;
+            }
+            else if(foundMovie -> title.compare(title) < 0)
+            {
+                foundMovie = foundMovie -> right;
+            }
+        }
+        if(foundMovie == nullptr)
+        {
+            cout << "Movie not found." << endl;
+        }
+    }
+
+}
 void MovieTree::rentMovie(string title){};
 void MovieTree::deleteMovie(MovieNode *root, string title){};
-void MovieTree::getMovieCount(){};
-MovieNode* MovieTree::findMinimum(MovieNode *node){return node;};
+void MovieTree::deleteAll(<#MovieNode *node#>)
+{
+    if(node != nullptr)
+    {
+        deleteAll(node->left);
+        deleteAll(node->right);
+        cout << "Deleting: "<< node->title << endl;
+        delete node;
+    }
+}
+
+int MovieTree::getMovieCount(MovieNode *node)
+{
+    static int c = 1;
+    if(node == nullptr)
+    {
+        return 0;
+    }
+    if(node -> left != nullptr)
+    {
+        getMovieCount(node -> left);
+        c++;
+    }
+    if(node -> right != nullptr)
+    {
+        getMovieCount(node -> right);
+        c++;
+
+    }
+    return c;
+}
+MovieNode* MovieTree::findMinimum(MovieNode *node)
+{
+    while(node-> left !=nullptr)
+    {
+        node = node -> left;
+    }
+    return node;
+}
 void MovieTree::postDelete(MovieNode * node){};
-
-
-
 
 
 
@@ -149,7 +281,7 @@ void displayMenu()
     cout << "6. Quit" << endl;
 }
 
-MovieTree* handleUserInput(MovieNode *movieTree)
+MovieTree* handleUserInput(MovieTree *movieTree)
 {
     string choice = " ";
     int input;
@@ -186,7 +318,7 @@ MovieTree* handleUserInput(MovieNode *movieTree)
                 bool found = true;
                 cout << "Enter title:" << endl;
                 getline(cin, deleteMovieTitle);
-                movieTree -> deleteMovie(deleteMovieTitle);
+                movieTree -> deleteMovie(movieTree->getRoot(), deleteMovieTitle);
                 if(found == false){
                     cout << "Movie not found." << endl;
                 }
@@ -194,7 +326,7 @@ MovieTree* handleUserInput(MovieNode *movieTree)
             }
                 
             case 5:{ // This is the case in which the user chooses 5 and wants to know how many movie nodes there are in the tree
-                movieTree -> countMovieNodes();
+                movieTree -> getMovieCount(movieTree->getRoot());
                 break;
             }
                 

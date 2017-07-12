@@ -220,12 +220,12 @@ void MovieTree::rentMovie(string title)
                     cout << "Title:" << rentedMovie->title << endl;
                     cout << "Year:" << rentedMovie->year << endl;
                     cout << "Quantity:" << rentedMovie->quantity << endl;
-                    break;
+                    
                 }
-                else if(rentedMovie -> quantity == 0)
+                if(rentedMovie -> quantity == 0)
                 {
                     //Movie is not in stock
-                    cout << "Movie out of stock." << endl;
+                    deleteMovie(rentedMovie->title);
                     break;
                 }
             }
@@ -348,20 +348,21 @@ MovieTree::MovieTree(){
 MovieTree::~MovieTree(){}
 
 int main(int argc, const char * argv[]) {
-    //if(argc == 1)
-    //{
-     //   cout << "Need to input text file" << endl;
-    //    return -1;
-    //}
+    return 0;
+    if(argc == 1)
+    {
+        cout << "Need to input text file" << endl;
+        return -1;
+    }
     MovieTree * movieTree = new MovieTree();
     int itemCount = 1;
-    string fName = "";
+    //string fName = "";
     ifstream inFile;
     string uniqueLine = "";
     string uniqueWord = "";
-    getline(cin, fName);
-    //inFile.open(argv[1]);
-    inFile.open(fName);
+    //getline(cin, fName);
+    inFile.open(argv[1]);
+    //inFile.open(fName);
     if(!inFile.is_open())
     {
         cout << "File not open" << endl;
@@ -470,13 +471,14 @@ MovieTree* handleUserInput(MovieTree *movieTree)
             }
                 
             case 5:{ // This is the case in which the user chooses 5 and wants to know how many movie nodes there are in the tree
-                movieTree -> getMovieCount(movieTree->getRoot());
+                cout << "Tree contains: " << movieTree -> getMovieCount(movieTree->getRoot())<< " movies." << endl;
                 break;
             }
                 
             case 6:{ // This is the case in which the user chooses 6 and wishes to quit the program
                 quit = true;
                 cout << "Goodbye!" << endl;
+                movieTree -> deleteAll(movieTree->getRoot());
                 break;
             }
                 

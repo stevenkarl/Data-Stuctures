@@ -40,13 +40,14 @@ class MovieTree
     public:
         MovieTree();
         ~MovieTree();
-        void printMovieInventory();
+        void printInOrder(MovieNode *node);
+        MovieTree *buildBst(string filename);
         void printEach(MovieNode *node);
         void addMovieNode(int ranking, string title, int releaseYear, int quantity);
         void findMovie(string title);
         MovieNode *search(string title);
         void rentMovie(string title);
-        void deleteMovie(MovieNode *root, string title);
+        void deleteMovie(string title);
         int getMovieCount(MovieNode *node);
         void deleteAll(MovieNode *node)
         {
@@ -66,13 +67,11 @@ class MovieTree
     
     private:
         MovieNode *root;
-        void printInOrder(MovieNode *node);
    
 };
 
 MovieTree * handleUserInput(MovieTree * movieTree);
 void displayMenu();
-void MovieTree::printMovieInventory(){};
 
 void MovieTree::printInOrder(MovieNode *node)
 {
@@ -168,6 +167,7 @@ void MovieTree::findMovie(string title)
     }
 
 }
+
 MovieNode *MovieTree::search(string title)
 {
     MovieNode *foundMovie = root;
@@ -192,10 +192,6 @@ MovieNode *MovieTree::search(string title)
             {
                 foundMovie = foundMovie -> right;
             }
-        }
-        if(foundMovie == nullptr)
-        {
-           return nullptr;
         }
     }
     return foundMovie;
@@ -250,7 +246,67 @@ void MovieTree::rentMovie(string title)
     }
 return;
 }
-void MovieTree::deleteMovie(MovieNode *root, string title){};
+void MovieTree::deleteMovie(string title)
+{
+    MovieNode  *movie = search(title);
+    if(movie != nullptr)
+    {
+        if((movie -> left == nullptr)&&(movie -> right == nullptr))
+        {
+            if(movie -> parent -> left == movie)
+            {
+                movie -> parent -> left = nullptr;
+            }
+            else if(movie -> parent -> right == movie)
+            {
+                movie -> parent -> right = nullptr;
+            }
+            delete movie;
+        }
+        else if((movie->left != nullptr)&&(movie -> right == nullptr))
+        {
+            if(movie -> parent -> left == movie)
+            {
+                movie -> parent -> left = movie -> left;
+                movie -> left -> parent = movie -> parent;
+            }
+            else if(movie -> parent -> right == movie)
+            {
+                movie -> parent -> right = movie -> right;
+                movie -> right -> parent = movie -> parent;
+            }
+            delete movie;
+        }
+        else if((movie -> left == nullptr)&&(movie -> right != nullptr))
+        {
+            if(movie -> parent -> left == movie)
+            {
+                movie -> parent -> left = movie -> right;
+                movie -> right -> parent = movie -> parent;
+            }
+            else if(movie -> parent -> right == movie)
+            {
+                movie -> parent -> right = movie -> right;
+                movie -> right -> parent = movie -> parent;
+            }
+            delete movie;
+        }
+        else if((movie -> left != nullptr)&&(movie -> right != nullptr))
+        {
+            MovieNode *replace = findMinimum(movie->right);
+            MovieNode *temp = new MovieNode(replace -> ranking, replace -> title, replace-> year, replace -> quantity);
+            
+            deleteMovie(replace -> title);
+            
+            movie -> title = temp -> title;
+            movie -> ranking = temp -> ranking;;
+            movie -> year = temp -> year;
+            movie -> quantity = temp -> quantity;
+            
+            delete temp;
+        }
+    }
+}
 
 
 int MovieTree::getMovieCount(MovieNode *node)
@@ -285,7 +341,6 @@ MovieNode* MovieTree::findMinimum(MovieNode *node)
 
 
 
-
 MovieTree::MovieTree(){
     root = NULL;
 }
@@ -293,17 +348,25 @@ MovieTree::MovieTree(){
 MovieTree::~MovieTree(){}
 
 int main(int argc, const char * argv[]) {
-    if(argc == 1)
-    {
-        cout << "Need to input text file" << endl;
-        return -1;
-    }
+    //if(argc == 1)
+    //{
+     //   cout << "Need to input text file" << endl;
+    //    return -1;
+    //}
     MovieTree * movieTree = new MovieTree();
     int itemCount = 1;
+    string fName = "";
     ifstream inFile;
     string uniqueLine = "";
     string uniqueWord = "";
-    inFile.open(argv[1]);
+    getline(cin, fName);
+    //inFile.open(argv[1]);
+    inFile.open(fName);
+    if(!inFile.is_open())
+    {
+        cout << "File not open" << endl;
+        return 0;
+    }
     if(inFile.is_open())
     {
         //Get the individual line from the file
@@ -311,13 +374,13 @@ int main(int argc, const char * argv[]) {
         {
             stringstream ss(uniqueLine);
             itemCount = 1;
-            int ranking;
-            string title;
-            int year;
-            int quantity;
+            int ranking = 0;
+            string title = "";
+            int year = 0;
+            int quantity = 0;
             
             //Get the individual item from the line
-            while(getline(ss, uniqueWord))
+            while(getline(ss, uniqueWord, ','))
             {
                 switch(itemCount){
                     case 1:
@@ -390,7 +453,7 @@ MovieTree* handleUserInput(MovieTree *movieTree)
             }
                 
             case 3:{ //This is the case in which the user chooses 3 and wants to print out the inventory
-                movieTree -> printMovieInventory();
+                movieTree -> printInOrder(movieTree->getRoot());
                 break;
             }
                 
@@ -399,7 +462,7 @@ MovieTree* handleUserInput(MovieTree *movieTree)
                 bool found = true;
                 cout << "Enter title:" << endl;
                 getline(cin, deleteMovieTitle);
-                movieTree -> deleteMovie(movieTree->getRoot(), deleteMovieTitle);
+                movieTree -> deleteMovie(deleteMovieTitle);
                 if(found == false){
                     cout << "Movie not found." << endl;
                 }

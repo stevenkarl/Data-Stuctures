@@ -612,7 +612,7 @@ void MovieTree::rentMovie(string title)
         }
     }
 }
-void displayMenu(){};
+void displayMenu();
 MovieTree *handleUserInput(MovieTree * movieTree)
 {
     string choice = " ";
@@ -718,7 +718,62 @@ MovieTree::~MovieTree()
 }
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    MovieTree * movieTree = new MovieTree();
+    int itemCount = 1;
+    string fName = "";
+    ifstream inFile;
+    string uniqueLine = "";
+    string uniqueWord = "";
+    getline(cin, fName);
+    inFile.open(fName);
+    if(!inFile.is_open())
+    {
+        cout << "File not open" << endl;
+        return 0;
+    }
+    if(inFile.is_open())
+    {
+        //Get the individual line from the file
+        while(getline(inFile, uniqueLine))
+        {
+            stringstream ss(uniqueLine);
+            itemCount = 1;
+            int ranking = 0;
+            string title = "";
+            int year = 0;
+            int quantity = 0;
+            
+            //Get the individual item from the line
+            while(getline(ss, uniqueWord, ','))
+            {
+                switch(itemCount){
+                    case 1:
+                        ranking = stoi(uniqueWord);
+                        break;
+                        
+                    case 2:
+                        title = uniqueWord;
+                        break;
+                        
+                    case 3:
+                        year = stoi(uniqueWord);
+                        break;
+                        
+                    case 4:
+                        quantity = stoi(uniqueWord);
+                        break;
+                        
+                    default:
+                        break;
+                }
+                itemCount++;
+            }
+            movieTree->addMovieNode(ranking, title, year, quantity);
+        }
+    }
+    inFile.close();
+    movieTree = handleUserInput(movieTree);
+    delete(movieTree);
     return 0;
 }
+

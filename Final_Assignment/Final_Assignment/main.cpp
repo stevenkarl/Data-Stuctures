@@ -47,7 +47,6 @@ class MovieTree
 public:
     MovieTree();
     virtual ~MovieTree();
-    int countMovieNodes();
     void deleteMovieNode(string title);
     void addMovieNode(int ranking, string title, int releaseYear, int quantity);
     void findMovie(string title);
@@ -468,7 +467,7 @@ int MovieTree::rbValid(MovieNode * node) //check if the tree is valid, with node
 
 //////////////////////////////////////////////////////////////
 
-int countMovieNodes(MovieNode *node) //number of unique titles in the tree
+int MovieTree::countMovieNodes(MovieNode *node) //number of unique titles in the tree
 {
     int c = 1;
     if(node -> left != nullptr)

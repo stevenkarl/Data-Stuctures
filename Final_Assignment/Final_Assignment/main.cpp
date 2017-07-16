@@ -704,6 +704,10 @@ void MovieTree::displayMenu()
 MovieTree::MovieTree()
 {
     root = NULL;
+    nil = new MovieNode(0, "", 0, 0);
+    root = nil;
+    nil->isRed = false;
+    nil->left = nil->right = nil;
 }
 
 MovieTree::~MovieTree()

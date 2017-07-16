@@ -7,7 +7,6 @@
 //
 
 #include <iostream>
-#include <iostream>
 #include <math.h>
 #include <fstream>
 #include <string>
@@ -60,13 +59,19 @@ public:
     void printMovieInventory(MovieNode * node);
     void rbAddFixup(MovieNode * node); // called after insert to fix tree
     void leftRotate(MovieNode * x); //rotate the tree left with x as the root of the rotation
-    void rbDelete(MovieNode * z); //delete a node. Call this from deleteMovieNode, the actual delete functionality happens here.
+    void rbDelete(string title); //delete a node. Call this from deleteMovieNode, the actual delete functionality happens here.
     void rightRotate(MovieNode * x); //rotate the tree right with x as the root of the rotation
     void rbDeleteFixup(MovieNode * node); //called after delete to fix the tree
     int rbValid(MovieNode * node); //check if the tree is valid, with node as the root of the tree
     int countMovieNodes(MovieNode *node); //number of unique titles in the tree
+    int MovieCount(MovieNode *node);
     int countLongestPath(MovieNode *node); //longest path from node to a leaf node in the tree
     MovieNode* searchMovieTree(string title);
+    MovieNode* getRoot()
+    {
+        return root;
+    }
+
     
 protected:
     
@@ -175,7 +180,7 @@ void MovieTree::addMovieNode(int ranking, string title, int releaseYear, int qua
 
 /////////////////////////////////////////////////////
 
-void rbAddFixup(MovieNode *x) // called after insert to fix tree
+void MovieTree::rbAddFixup(MovieNode *x) // called after insert to fix tree
 {
     x -> left = nil;
     x -> right = nil;
@@ -235,9 +240,7 @@ void rbAddFixup(MovieNode *x) // called after insert to fix tree
 
 void MovieTree::deleteMovieNode(string title)
 {
-    MovieNode *toDelete = searchMovieTree(title);
-    rbDelete(toDelete);
-    return;
+
 }
 
 //////////////////////////////////////////////////////////////
@@ -291,9 +294,9 @@ void MovieTree::rbDelete(string title) //delete a node. Call this from deleteMov
     {
         
     }
-    if(nodeColor -> isRed == false)
+    if(nodeColor == false)
     {
-        rbDeleteFixup(x)
+        rbDeleteFixup(x);
     }
     delete movie;
 }
@@ -423,7 +426,7 @@ int MovieTree::rbValid(MovieNode * node) //check if the tree is valid, with node
         // First check for consecutive red links.
         if (node->isRed)
         {
-            if(node->leftChild->isRed || node->rightChild->isRed)
+            if(node->left->isRed || node->right->isRed)
             {
                 cout << "This tree contains a red violation" << endl;
                 return 0;
@@ -431,15 +434,15 @@ int MovieTree::rbValid(MovieNode * node) //check if the tree is valid, with node
         }
         
         // Check for valid binary search tree.
-        if ((node->leftChild != nil && node->leftChild->title.compare(node->title) > 0) || (node->rightChild != nil && node->rightChild->title.compare(node->title) < 0))
+        if ((node->left != nil && node->left->title.compare(node->title) > 0) || (node->right != nil && node->right->title.compare(node->title) < 0))
         {
             cout << "This tree contains a binary tree violation" << endl;
             return 0;
         }
         
         // Deteremine the height of let and right children.
-        lh = rbValid(node->leftChild);
-        rh = rbValid(node->rightChild);
+        lh = rbValid(node->left);
+        rh = rbValid(node->right);
         
         // black height mismatch
         if (lh != 0 && rh != 0 && lh != rh)
@@ -496,7 +499,7 @@ int MovieTree::MovieCount(MovieNode *node)
 
 int countLongestPath(MovieNode *node) //longest path from node to a leaf node in the tree
 {
-    n = MovieCount(node) + 1;
+    int n = MovieCount(node) + 1;
     return log2(n);
     
 }

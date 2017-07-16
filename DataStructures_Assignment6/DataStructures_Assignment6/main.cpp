@@ -59,6 +59,7 @@ public:
         return root;
     }
     void rightRotate(MovieNode * x); //rotate the tree right with x as the root of the rotation
+    MovieNode* searchMovieTree(string title);
     
 protected:
     
@@ -74,7 +75,6 @@ private:
     int rbValid(MovieNode * node); //check if the tree is valid, with node as the root of the tree
     int countMovieNodes(MovieNode *node); //number of unique titles in the tree
     int countLongestPath(MovieNode *node); //longest path from node to a leaf node in the tree
-    MovieNode* searchMovieTree(MovieNode * node, string title);
     MovieNode *root;
     MovieNode *nil;
     
@@ -537,8 +537,8 @@ void MovieTree::findMovie(string title)
 
 void MovieTree::rentMovie(string title)
 {
-    MovieNode *rentedMovie = searchMovieTree(title);
-    if(rentedMovie == nullptr)
+    MovieNode *foundMovie = searchMovieTree(title);
+    if(foundMovie == nullptr)
     {
         cout << "Movie not found." << endl;
     }
@@ -655,6 +655,10 @@ void MovieTree::displayMenu()
 MovieTree::MovieTree()
 {
     root = NULL;
+    nil = new MovieNode(0, "", 0 , 0);
+    nil -> isRed = false;
+    nil -> left = nil;
+    nil -> right = nil;
 }
 
 MovieTree::~MovieTree()

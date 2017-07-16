@@ -47,7 +47,6 @@ class MovieTree
 public:
     MovieTree();
     virtual ~MovieTree();
-    void displayMenu();
     int countMovieNodes();
     void deleteMovieNode(string title);
     void addMovieNode(int ranking, string title, int releaseYear, int quantity);
@@ -497,7 +496,7 @@ int MovieTree::MovieCount(MovieNode *node)
 
 //////////////////////////////////////////////////////////////
 
-int countLongestPath(MovieNode *node) //longest path from node to a leaf node in the tree
+int MovieTree::countLongestPath(MovieNode *node) //longest path from node to a leaf node in the tree
 {
     int n = MovieCount(node) + 1;
     return log2(n);
@@ -613,8 +612,8 @@ void MovieTree::rentMovie(string title)
         }
     }
 }
-
-MovieTree * MovieTree::handleUserInput(MovieTree * movieTree)
+void displayMenu(){};
+MovieTree *handleUserInput(MovieTree * movieTree)
 {
     string choice = " ";
     int input;
@@ -690,7 +689,7 @@ MovieTree * MovieTree::handleUserInput(MovieTree * movieTree)
 
 ////////////////////////////////////////////////////
 
-void MovieTree::displayMenu()
+void displayMenu()
 {
     cout << "======Main Menu======" << endl;
     cout << "1. Find a movie" << endl;

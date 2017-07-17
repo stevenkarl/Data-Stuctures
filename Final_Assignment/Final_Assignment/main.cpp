@@ -78,7 +78,6 @@ private:
     MovieNode *root;
     MovieNode *nil;
     
-    
 };
 
 //////////////////////////////////////////////
@@ -141,6 +140,7 @@ void MovieTree::addMovieNode(int ranking, string title, int releaseYear, int qua
     MovieNode *newNode = new MovieNode(ranking, title, releaseYear, quantity); //Creating the node that will be inserted
     newNode -> left = nil;
     newNode -> right = nil;
+    newNode -> isRed = true;
     MovieNode *y = nil;
     MovieNode *x = root;
     
@@ -149,11 +149,11 @@ void MovieTree::addMovieNode(int ranking, string title, int releaseYear, int qua
         y = x;
         if(newNode -> title.compare(x -> title) < 0) // compare the titles
         {
-            newNode = newNode -> left;//smaller go left
+            x = x -> left;//smaller go left
         }
         else
         {
-            newNode = newNode -> right;//else go right
+            x = x -> right;//else go right
         }
         
     }
@@ -687,7 +687,6 @@ MovieTree *handleUserInput(MovieTree * movieTree)
 }
 
 ////////////////////////////////////////////////////
-
 void displayMenu()
 {
     cout << "======Main Menu======" << endl;
@@ -713,7 +712,7 @@ MovieTree::MovieTree()
 
 MovieTree::~MovieTree()
 {
-    DeleteAll(this->root);
+
 }
 
 int main(int argc, const char * argv[]) {

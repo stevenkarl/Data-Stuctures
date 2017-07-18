@@ -183,7 +183,6 @@ void MovieTree::rbAddFixup(MovieNode *x) // called after insert to fix tree
     x -> left = nil;
     x -> right = nil;
     MovieNode *y = NULL;
-    x -> isRed = true;
     while(x != root && x -> parent -> isRed == true)
     {
         if(x -> parent == x -> parent -> parent -> left)
@@ -205,7 +204,7 @@ void MovieTree::rbAddFixup(MovieNode *x) // called after insert to fix tree
                 }
                 x -> parent  -> isRed = false;          /////////Case 3
                 x -> parent -> parent -> isRed = true;  /////////Case 3
-                rightRotate(x);                         /////////Case 3
+                rightRotate(x -> parent -> parent);                         /////////Case 3
             }
         }
         else
@@ -227,7 +226,7 @@ void MovieTree::rbAddFixup(MovieNode *x) // called after insert to fix tree
                 }
                 x -> parent -> isRed = false;
                 x -> parent -> parent -> isRed = true;
-                leftRotate(x);
+                leftRotate(x -> parent -> parent);
             }
         }
     }
@@ -315,19 +314,18 @@ void MovieTree::rbDeleteFixup(MovieNode *x) //called after delete to fix the tre
                 x -> parent -> isRed = true;
                 leftRotate(x -> parent);
                 sibling = x -> parent -> right;
-                
-                if(sibling -> left -> isRed == false && sibling -> right -> isRed == false)
-                {
-                    sibling -> isRed = true;
-                    x = x -> parent;
-                }
-                else if(sibling -> left -> isRed == true && sibling -> right -> isRed == false)
-                {
+            }
+            if(sibling -> left -> isRed == false && sibling -> right -> isRed == false)
+            {
+                sibling -> isRed = true;
+                x = x -> parent;
+            }
+            else if(sibling -> right -> isRed == false)
+            {
                     sibling -> left -> isRed = false;
                     sibling -> isRed = true;
                     rightRotate(sibling);
                     sibling = x -> parent -> right;
-                }
             }
             else
             {
@@ -346,20 +344,19 @@ void MovieTree::rbDeleteFixup(MovieNode *x) //called after delete to fix the tre
                 sibling -> isRed = false;
                 x -> parent -> isRed = true;
                 rightRotate(x -> parent);
-                sibling = x -> parent -> right;
-                
-                if(sibling -> left -> isRed == false && sibling -> right -> isRed == false)
-                {
-                    sibling -> isRed = true;
-                    x = x -> parent;
-                }
-                else if(sibling -> left -> isRed == true && sibling -> right -> isRed == false)
-                {
-                    sibling -> left -> isRed = false;
-                    sibling -> isRed = true;
-                    leftRotate(sibling);
-                    sibling = x -> parent -> left;
-                }
+                sibling = x -> parent -> left;
+            }
+            if(sibling -> left -> isRed == false && sibling -> right -> isRed == false)
+            {
+                sibling -> isRed = true;
+                x = x -> parent;
+            }
+            else if(sibling -> left -> isRed == false)
+            {
+                sibling -> right -> isRed = false;
+                sibling -> isRed = true;
+                leftRotate(sibling);
+                sibling = x -> parent -> left;
             }
             else
             {
@@ -654,7 +651,7 @@ MovieTree *handleUserInput(MovieTree * movieTree)
                 bool found = true;
                 cout << "Enter title:" << endl;
                 getline(cin, deleteMovieTitle);
-                movieTree -> deleteMovieNode(deleteMovieTitle);
+                movieTree -> rbDelete(deleteMovieTitle);
                 if(found == false){
                     cout << "Movie not found." << endl;
                 }
